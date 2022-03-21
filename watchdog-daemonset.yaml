@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         name: watchdog
+      annotations:
+        openshift.io/scc: privileged
     spec:
       tolerations:
       # this toleration is to have the daemonset runnable on master nodes
@@ -23,29 +25,10 @@ spec:
       containers:
       - name: watchdog
         image: quay.io/ricardoalonsos/watchdog:latest
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 50Mi
         securityContext:
           privileged: true
           runAsUser: 0
-        volumeMounts:
-        - name: dev-watchdog
-          mountPath: /dev/watchdog
-        - name: dev-watchdog0
-          mountPath: /dev/watchdog0
+      hostNetwork: true
       serviceAccount: watchdog
       serviceAccountName: watchdog
       terminationGracePeriodSeconds: 30
-      volumes:
-      - name: dev-watchdog
-        hostPath:
-          path: /dev/watchdog
-          type: CharDevice
-      - name: dev-watchdog0
-        hostPath:
-          path: /dev/watchdog0
-          type: CharDevice
