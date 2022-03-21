@@ -1,6 +1,7 @@
-FROM ubi8/ubi-init
+FROM registry.redhat.io/ubi8/ubi-init
 
-RUN dnf install -y --nodocs watchdog && \
+RUN dnf update -y && \
+    dnf install -y --nodocs watchdog && \
     dnf clean all && \
     systemctl enable watchdog.service && \
     sed -i 's/#watchdog-device/watchdog-device/' /etc/watchdog.conf && \
